@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEFF — Web Designer & Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#f4f7f3;
+  --card:#ffffff;
+  --card-2:#eaf1ea;
+  --hair:rgba(18,36,25,.13);
+  --paper:#152218;
+  --dim:#5c7263;
+  --vio:#2f6a4a;
+  --cya:#2f9e63;
+  --pink:#7aa93c;
+  --grad:linear-gradient(110deg,var(--vio),var(--cya) 55%,var(--pink));
+  --display:'Syne',sans-serif;
+  --body:'Instrument Sans',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);color:var(--paper);
+  font-family:var(--body);line-height:1.6;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--vio);color:#fff}
+
+/* ---------- CUSTOM CURSOR (desktop) ---------- */
+@media (pointer:fine){
+  .cursor-dot,.cursor-ring{
+    position:fixed;top:0;left:0;pointer-events:none;z-index:9999;
+    border-radius:50%;transform:translate(-50%,-50%);
+  }
+  .cursor-dot{width:6px;height:6px;background:var(--cya)}
+  .cursor-ring{
+    width:34px;height:34px;border:1.5px solid rgba(63,125,90,.7);
+    transition:width .25s,height .25s,border-color .25s,background .25s;
+  }
+  .cursor-ring.hot{
+    width:64px;height:64px;border-color:var(--cya);
+    background:rgba(47,158,99,.12);
+  }
+  .cursor-ring.hot::after{
+    content:attr(data-label);position:absolute;inset:0;
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);font-size:9px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--cya);
+  }
+}
+
+/* scroll progress */
+.progress{position:fixed;top:0;left:0;height:3px;width:100%;z-index:200;transform-origin:left}
+.progress i{display:block;height:100%;background:var(--grad);transform:scaleX(var(--p,0));transform-origin:left}
+
+/* ---------- NAV ---------- */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px clamp(20px,5vw,64px);
+  background:rgba(244,247,243,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--hair);
+}
+.logo{
+  font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:.06em;
+  color:var(--paper);text-decoration:none;
+}
+.logo i{
+  font-style:normal;
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.nav-links{display:flex;gap:32px;align-items:center;list-style:none}
+.nav-links a{
+  color:var(--dim);text-decoration:none;font-size:13px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;transition:color .25s;
+}
+.nav-links a:hover,.nav-links a:focus-visible{color:var(--cya)}
+.nav-cta{
+  color:var(--paper)!important;padding:9px 20px;border-radius:100px;
+  position:relative;isolation:isolate;overflow:hidden;
+}
+.nav-cta::before{
+  content:"";position:absolute;inset:0;border-radius:100px;padding:1px;
+  background:var(--grad);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;z-index:-1;
+}
+.nav-cta:hover{color:#fff!important}
+.burger{display:none;background:none;border:0;cursor:pointer;width:40px;height:40px;position:relative;z-index:102}
+.burger span{display:block;width:22px;height:2px;background:var(--paper);margin:5px auto;transition:transform .35s,opacity .35s}
+.burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* ---------- HERO ---------- */
+header{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden}
+#scene{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero-fade{
+  position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 75% 65% at 50% 50%,transparent 40%,rgba(244,247,243,.96) 100%);
+}
+.hero-inner{position:relative;z-index:2;width:100%;padding:96px clamp(20px,5vw,64px) 64px;text-align:center}
+.eyebrow{
+  font-family:var(--mono);font-size:12px;letter-spacing:.32em;text-transform:uppercase;
+  color:var(--cya);margin-bottom:22px;
+}
+h1{
+  font-family:var(--display);font-weight:800;
+  font-size:clamp(40px,8.5vw,104px);line-height:1.0;letter-spacing:-.015em;color:var(--paper);
+}
+h1 .chroma{
+  background:var(--grad);background-size:200% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:flow 6s ease-in-out infinite;
+}
+@keyframes flow{0%,100%{background-position:0% 0}50%{background-position:100% 0}}
+.hero-sub{margin:24px auto 0;max-width:52ch;color:var(--dim);font-size:clamp(15px,1.7vw,18px)}
+.hero-row{margin-top:38px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn{
+  font-family:var(--body);font-weight:600;font-size:14px;letter-spacing:.06em;
+  text-transform:uppercase;text-decoration:none;cursor:pointer;border:0;
+  padding:16px 34px;border-radius:100px;display:inline-block;
+  transition:transform .3s,box-shadow .3s;will-change:transform;
+}
+.btn-grad{background:var(--grad);background-size:150% 100%;color:#fff;box-shadow:0 10px 34px rgba(47,106,74,.3)}
+.btn-grad:hover{box-shadow:0 16px 46px rgba(47,158,99,.3)}
+.btn-line{background:transparent;color:var(--paper);box-shadow:inset 0 0 0 1px var(--hair)}
+.btn-line:hover{box-shadow:inset 0 0 0 1px var(--cya);color:var(--cya)}
+.hero-hint{
+  position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:2;
+  font-family:var(--mono);font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim);
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+}
+.hero-hint::after{content:"";width:1px;height:38px;background:linear-gradient(var(--cya),transparent);animation:drip 2s ease-in-out infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ---------- MARQUEE ---------- */
+.marquee{
+  border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);
+  overflow:hidden;padding:18px 0;background:var(--card);
+}
+.marquee-track{display:flex;gap:48px;width:max-content;animation:scroll 26s linear infinite}
+.marquee:hover .marquee-track{animation-play-state:paused}
+.marquee span{
+  font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim);white-space:nowrap;display:flex;align-items:center;gap:48px;
+}
+.marquee b{
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+}
+@keyframes scroll{to{transform:translateX(-50%)}}
+
+/* ---------- SECTIONS ---------- */
+section{padding:clamp(80px,12vh,140px) clamp(20px,5vw,64px);position:relative}
+.shell{max-width:1200px;margin:0 auto}
+.sec-head{margin-bottom:clamp(40px,6vh,68px)}
+.sec-head .eyebrow{margin-bottom:14px}
+h2{
+  font-family:var(--display);font-weight:800;
+  font-size:clamp(30px,5vw,56px);line-height:1.05;letter-spacing:-.01em;color:var(--paper);
+}
+.sec-head p{margin-top:16px;color:var(--dim);max-width:56ch}
+#scene{cursor:grab;touch-action:pan-y}
+#scene.grabbing{cursor:grabbing}
+.drag-hint{
+  position:absolute;bottom:26px;left:50%;transform:translateX(-50%);
+  font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--dim);border:1px solid var(--hair);border-radius:100px;padding:8px 16px;
+  background:rgba(255,255,255,.55);backdrop-filter:blur(6px);pointer-events:none;
+  transition:opacity .6s;display:flex;gap:8px;align-items:center;
+}
+.drag-hint span{display:inline-block;animation:spinHint 3s linear infinite}
+@keyframes spinHint{to{transform:rotate(360deg)}}
+.drag-hint.gone{opacity:0}
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- WORK / PROJECT CARDS ---------- */
+#work{background:linear-gradient(var(--ink),#e7efe6 50%,var(--ink))}
+.proj{
+  display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(28px,4vw,56px);
+  align-items:center;margin-bottom:clamp(72px,10vh,120px);
+}
+.proj:last-child{margin-bottom:0}
+.proj.flip .proj-visual{order:2}
+.proj-visual{perspective:1400px}
+.browser{
+  background:var(--card-2);border:1px solid var(--hair);border-radius:14px;
+  overflow:hidden;transform-style:preserve-3d;will-change:transform;
+  box-shadow:0 30px 90px rgba(24,44,32,.22);
+  transition:box-shadow .4s;position:relative;
+}
+.browser:hover{box-shadow:0 44px 120px rgba(24,44,32,.32)}
+.browser-bar{
+  display:flex;align-items:center;gap:8px;padding:12px 16px;
+  background:rgba(18,36,25,.05);border-bottom:1px solid var(--hair);
+}
+.browser-bar i{width:10px;height:10px;border-radius:50%;background:var(--hair)}
+.browser-bar i:nth-child(1){background:#ff5f57}.browser-bar i:nth-child(2){background:#febc2e}.browser-bar i:nth-child(3){background:#28c840}
+.browser-bar .url{
+  flex:1;margin-left:10px;font-family:var(--mono);font-size:11px;color:var(--dim);
+  background:rgba(18,36,25,.08);border-radius:6px;padding:5px 12px;letter-spacing:.04em;
+}
+.browser-view{position:relative;aspect-ratio:16/10.2;overflow:hidden}
+.browser-view svg{width:100%;height:100%;display:block}
+.browser .overlay{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(10,15,11,.55);backdrop-filter:blur(3px);
+  opacity:0;transition:opacity .35s;
+}
+.browser:hover .overlay{opacity:1}
+.overlay a{
+  font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;
+  color:#fff;text-decoration:none;background:var(--grad);
+  padding:14px 26px;border-radius:100px;font-weight:500;
+  transform:translateY(8px);transition:transform .35s;
+}
+.browser:hover .overlay a{transform:none}
+.proj-info .tag{
+  font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--cya);
+}
+.proj-info h3{
+  font-family:var(--display);font-weight:800;font-size:clamp(24px,3vw,36px);
+  color:var(--paper);margin:12px 0 14px;letter-spacing:-.01em;
+}
+.proj-info p{color:var(--dim);font-size:15px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.chip{
+  font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--paper);
+  border:1px solid var(--hair);border-radius:100px;padding:6px 14px;
+  transition:border-color .25s,color .25s,transform .25s;
+}
+.chip:hover{border-color:var(--vio);color:var(--cya);transform:translateY(-2px)}
+.proj-feats{list-style:none;margin-top:22px}
+.proj-feats li{
+  font-size:14px;color:var(--paper);padding:8px 0 8px 24px;position:relative;
+  border-bottom:1px solid var(--hair);
+}
+.proj-feats li::before{
+  content:"→";position:absolute;left:0;
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+}
+
+/* ---------- SERVICES ---------- */
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;perspective:1200px}
+.svc{
+  background:var(--card);border:1px solid var(--hair);border-radius:16px;
+  padding:32px 28px;position:relative;overflow:hidden;
+  transform-style:preserve-3d;transition:border-color .3s;will-change:transform;
+}
+.svc::before{
+  content:"";position:absolute;inset:0;opacity:0;transition:opacity .35s;pointer-events:none;
+  background:radial-gradient(420px circle at var(--gx,50%) var(--gy,50%),rgba(63,125,90,.14),transparent 60%);
+}
+.svc:hover::before{opacity:1}
+.svc:hover{border-color:rgba(47,106,74,.5)}
+.svc .num{
+  font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--cya);display:block;margin-bottom:20px;
+}
+.svc h3{font-family:var(--display);font-weight:700;font-size:19px;color:var(--paper);margin-bottom:10px}
+.svc p{font-size:14px;color:var(--dim)}
+
+/* ---------- STATS ---------- */
+#stats{padding-top:0}
+.stat-row{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  border:1px solid var(--hair);border-radius:16px;overflow:hidden;background:var(--card);
+}
+.stat{padding:34px 26px;border-right:1px solid var(--hair);text-align:center}
+.stat:last-child{border-right:0}
+.stat b{
+  font-family:var(--display);font-weight:800;font-size:clamp(30px,3.6vw,46px);
+  display:block;font-variant-numeric:tabular-nums;
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.stat span{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+
+/* ---------- PROCESS STRIP ---------- */
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;counter-reset:fl;position:relative;padding-top:26px}
+.flow::before{content:"";position:absolute;top:0;left:6px;right:6px;height:2px;background:var(--hair);border-radius:2px}
+.flow::after{content:"";position:absolute;top:0;left:6px;right:6px;height:2px;background:var(--grad);border-radius:2px;transform:scaleX(0);transform-origin:left;transition:transform 1.2s cubic-bezier(.3,.7,.2,1) .15s}
+.flow.in::after{transform:scaleX(1)}
+.flow>div{opacity:0;transform:translateY(20px);transition:opacity .7s,transform .7s cubic-bezier(.2,.7,.2,1),border-color .3s}
+.flow.in>div{opacity:1;transform:none}
+.flow.in>div:nth-child(1){transition-delay:.1s}
+.flow.in>div:nth-child(2){transition-delay:.32s}
+.flow.in>div:nth-child(3){transition-delay:.54s}
+.flow.in>div:nth-child(4){transition-delay:.76s}
+.flow div{
+  background:var(--card);border:1px solid var(--hair);border-radius:14px;padding:26px 22px;
+  counter-increment:fl;transition:transform .3s,border-color .3s;
+}
+.flow div:hover{transform:translateY(-6px);border-color:rgba(47,158,99,.45)}
+.flow div::before{
+  content:"0" counter(fl);font-family:var(--mono);font-size:11px;letter-spacing:.2em;
+  color:var(--cya);display:block;margin-bottom:14px;
+}
+.flow h3{font-family:var(--display);font-weight:700;font-size:17px;color:var(--paper);margin-bottom:8px}
+.flow p{font-size:13.5px;color:var(--dim)}
+
+/* ---------- PRICING ---------- */
+#pricing{background:linear-gradient(var(--ink),#e7efe6 55%,var(--ink))}
+.plan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(272px,1fr));gap:20px;align-items:stretch}
+.plan{
+  background:var(--card);border:1px solid var(--hair);border-radius:18px;
+  padding:36px 30px;display:flex;flex-direction:column;cursor:pointer;
+  transition:transform .35s,border-color .35s,box-shadow .35s;will-change:transform;
+  position:relative;
+}
+.plan:hover{transform:translateY(-6px)}
+.plan.feat{
+  background:linear-gradient(170deg,rgba(63,125,90,.12),var(--card) 50%);
+}
+.plan.feat::before{
+  content:"";position:absolute;inset:0;border-radius:18px;padding:1px;
+  background:var(--grad);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;
+}
+.plan.picked{
+  border-color:var(--cya);
+  box-shadow:0 0 0 1px var(--cya),0 26px 70px rgba(47,158,99,.18);
+}
+.plan .ribbon{
+  position:absolute;top:-12px;left:30px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  background:var(--grad);color:#fff;padding:5px 14px;border-radius:100px;font-weight:500;
+}
+.plan-tag{font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--dim)}
+.plan.feat .plan-tag{color:var(--cya)}
+.plan h3{font-family:var(--display);font-weight:800;font-size:24px;color:var(--paper);margin:12px 0 2px}
+.plan .amount{
+  font-family:var(--display);font-weight:800;font-size:40px;margin:14px 0 2px;
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+  font-variant-numeric:tabular-nums;
+}
+.plan .amount small{font-size:16px}
+.plan .per{font-size:13px;color:var(--dim)}
+.plan ul{list-style:none;margin:22px 0 26px;flex:1}
+.plan li{
+  font-size:14px;color:var(--paper);padding:9px 0 9px 24px;position:relative;
+  border-bottom:1px solid var(--hair);
+}
+.plan li::before{
+  content:"→";position:absolute;left:0;
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.plan .pick{
+  font-family:var(--body);font-weight:600;font-size:13px;letter-spacing:.08em;
+  text-transform:uppercase;text-align:center;padding:14px;border-radius:100px;
+  border:1px solid var(--hair);color:var(--paper);transition:all .3s;
+}
+.plan.picked .pick,.plan:hover .pick{border-color:var(--cya);color:var(--cya)}
+.plan.picked .pick{background:rgba(47,158,99,.12)}
+
+/* estimate builder */
+.builder{
+  margin-top:26px;background:var(--card);border:1px solid var(--hair);border-radius:18px;
+  padding:clamp(24px,4vw,36px);
+}
+.builder .b-label{
+  font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--dim);margin-bottom:16px;
+}
+.addons{display:flex;flex-wrap:wrap;gap:10px}
+.addon{
+  font-family:var(--body);font-size:13.5px;font-weight:500;color:var(--paper);
+  background:transparent;border:1px solid var(--hair);border-radius:100px;
+  padding:11px 20px;cursor:pointer;transition:all .25s;transform-origin:center;
+  display:flex;align-items:center;gap:8px;
+}
+.addon i{font-style:normal;font-family:var(--mono);font-size:11.5px;color:var(--dim);transition:color .25s}
+.addon:hover{border-color:var(--vio)}
+.addon:active{transform:scale(.94)}
+.addon.on{
+  border-color:var(--cya);background:rgba(47,158,99,.12);
+  animation:addonPop .35s cubic-bezier(.34,1.6,.5,1);
+}
+.addon.on i{color:var(--cya)}
+.addon.on::before{content:"✓";color:var(--cya);font-size:12px}
+@keyframes addonPop{0%{transform:scale(.9)}60%{transform:scale(1.05)}100%{transform:scale(1)}}
+.estimate{
+  margin-top:26px;padding-top:24px;border-top:1px solid var(--hair);
+  display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between;
+}
+.estimate .e-num{
+  font-family:var(--display);font-weight:800;font-size:clamp(32px,4.5vw,48px);
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+  font-variant-numeric:tabular-nums;line-height:1;
+}
+.estimate .e-num.bump{animation:eBump .4s cubic-bezier(.34,1.5,.5,1)}
+@keyframes eBump{0%{transform:scale(.95)}60%{transform:scale(1.04)}100%{transform:scale(1)}}
+.estimate .e-meta{font-size:13px;color:var(--dim);max-width:38ch}
+.estimate .e-meta b{color:var(--paper);font-weight:600}
+.price-note{margin-top:18px;font-size:12.5px;color:var(--dim);text-align:center}
+#contact{text-align:center}
+#contact h2{font-size:clamp(36px,7vw,84px)}
+#contact .sub{margin:18px auto 0;color:var(--dim);max-width:44ch}
+.cform{max-width:640px;margin:34px auto 0;display:flex;flex-direction:column;gap:12px;text-align:left}
+.cf-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:560px){.cf-row{grid-template-columns:1fr}}
+.cform input,.cform textarea{
+  width:100%;background:var(--card);border:1px solid var(--hair);border-radius:12px;
+  padding:14px 16px;font-family:var(--body);font-size:14.5px;color:var(--paper);
+  transition:border-color .25s,box-shadow .25s;resize:vertical;
+}
+.cform input::placeholder,.cform textarea::placeholder{color:var(--dim)}
+.cform input:focus,.cform textarea:focus{outline:none;border-color:var(--cya);box-shadow:0 0 0 3px rgba(47,158,99,.14)}
+.cf-foot{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.cf-status{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--dim)}
+.cf-status.ok{color:var(--vio)}
+.contact-cards{
+  margin-top:44px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap;
+}
+.ccard{
+  display:flex;align-items:center;gap:14px;
+  background:var(--card);border:1px solid var(--hair);border-radius:100px;
+  padding:16px 26px;cursor:pointer;transition:border-color .3s,transform .3s;
+  font-size:15px;color:var(--paper);text-decoration:none;will-change:transform;
+}
+.ccard:hover{border-color:var(--vio);transform:translateY(-3px)}
+.ccard svg{width:20px;height:20px;flex:none;color:var(--cya)}
+.ccard .copied{
+  font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--cya);opacity:0;transition:opacity .3s;
+}
+.ccard.done .copied{opacity:1}
+.big-cta{margin-top:44px}
+.big-cta .btn{font-size:16px;padding:20px 48px}
+
+/* ---------- FOOTER ---------- */
+footer.site{
+  border-top:1px solid var(--hair);padding:40px clamp(20px,5vw,64px);
+  display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:center;
+}
+footer.site p{font-size:13px;color:var(--dim)}
+
+a:focus-visible,button:focus-visible{outline:2px solid var(--cya);outline-offset:3px}
+
+/* ---------- MOBILE ---------- */
+@media (max-width:900px){
+  .nav-links{
+    position:fixed;inset:0;background:rgba(244,247,243,.98);
+    flex-direction:column;justify-content:center;gap:32px;
+    transform:translateY(-100%);transition:transform .45s cubic-bezier(.7,0,.3,1);z-index:101;
+  }
+  .nav-links.open{transform:none}
+  .nav-links a{font-size:17px}
+  .burger{display:block}
+  .proj{grid-template-columns:1fr}
+  .proj.flip .proj-visual{order:0}
+  .stat{border-right:0;border-bottom:1px solid var(--hair)}
+  .stat:last-child{border-bottom:0}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001s!important;transition-duration:.001s!important}
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none}
+  .marquee-track{animation:none}
+}
+</style>
+</head>
+<body>
+
+<div class="progress" aria-hidden="true"><i id="progressBar"></i></div>
+<div class="cursor-dot" id="cDot" aria-hidden="true"></div>
+<div class="cursor-ring" id="cRing" aria-hidden="true"></div>
+
+<nav>
+  <a class="logo" href="#top">SEFF<i>.</i></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact" class="nav-cta">Let's Talk</a></li>
+  </ul>
+  <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<header id="top">
+  <canvas id="scene" aria-hidden="true"></canvas>
+  <div class="drag-hint" id="dragHint"><span>↻</span> drag to spin</div>
+  <div class="hero-fade"></div>
+  <div class="hero-inner">
+    <div class="eyebrow">Seff — Web Designer & Developer</div>
+    <h1>I build websites that<br><span class="chroma">feel expensive.</span></h1>
+    <p class="hero-sub">Premium, animated, mobile-first sites for small businesses that want to look anything but small. Designed and built by one person who obsesses over every pixel — me.</p>
+    <div class="hero-row">
+      <a class="btn btn-grad magnetic" href="#work" data-cursor="View">See the Work</a>
+      <a class="btn btn-line magnetic" href="#contact" data-cursor="Hi!">Start a Project</a>
+    </div>
+  </div>
+  <div class="hero-hint">Scroll</div>
+</header>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track" id="marqueeTrack">
+    <span>Web Design <b>◆</b> 3D Experiences <b>◆</b> Motion & Interaction <b>◆</b> Mobile-First Builds <b>◆</b> Brand-Driven UI <b>◆</b> Booking Systems <b>◆</b> Custom Tools <b>◆</b></span>
+  </div>
+</div>
+
+<section id="work">
+  <div class="shell">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Selected Work</div>
+      <h2>Three businesses. Three identities.<br>Zero templates.</h2>
+      <p>All designed and built from scratch — every gradient, dropdown, and 3D scene is custom. One is a real client, live on its own domain right now. Hover the previews, then open the builds.</p>
+    </div>
+
+    <!-- PROJECT 1: OBSIDIAN -->
+    <article class="proj reveal">
+      <div class="proj-visual">
+        <div class="browser tilt" data-cursor="Open">
+          <div class="browser-bar"><i></i><i></i><i></i><span class="url">obsidiandetail.co</span></div>
+          <div class="browser-view">
+            <svg viewBox="0 0 640 408" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <defs>
+                <linearGradient id="obsBg" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#14171c"/><stop offset="1" stop-color="#0a0c0f"/>
+                </linearGradient>
+                <linearGradient id="goldBar" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0" stop-color="#cba35c" stop-opacity="0"/>
+                  <stop offset=".5" stop-color="#e8c98a"/>
+                  <stop offset="1" stop-color="#cba35c" stop-opacity="0"/>
+                </linearGradient>
+                <linearGradient id="goldTxt" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0" stop-color="#cba35c"/><stop offset="1" stop-color="#e8c98a"/>
+                </linearGradient>
+              </defs>
+              <rect width="640" height="408" fill="url(#obsBg)"/>
+              <!-- glossy panel + beads -->
+              <ellipse cx="320" cy="120" rx="330" ry="60" fill="#ffffff" opacity=".05"/>
+              <rect x="90" y="150" width="460" height="5" rx="2.5" fill="url(#goldBar)"/>
+              <rect x="160" y="176" width="320" height="3" rx="1.5" fill="url(#goldBar)" opacity=".5"/>
+              <g fill="#fff">
+                <circle cx="200" cy="230" r="9" opacity=".14"/><circle cx="197" cy="227" r="3" opacity=".7"/>
+                <circle cx="330" cy="252" r="12" opacity=".14"/><circle cx="326" cy="248" r="3.6" opacity=".7"/>
+                <circle cx="452" cy="238" r="8" opacity=".14"/><circle cx="450" cy="236" r="2.6" opacity=".7"/>
+              </g>
+              <!-- headline block -->
+              <text x="46" y="316" font-family="Georgia,serif" font-weight="bold" font-size="34" fill="#ffffff" letter-spacing="1">MIRROR</text>
+              <text x="200" y="316" font-family="Georgia,serif" font-weight="bold" font-size="34" fill="url(#goldTxt)" letter-spacing="1">DEPTH.</text>
+              <rect x="46" y="336" width="210" height="7" rx="3" fill="#3a3f47"/>
+              <rect x="46" y="352" width="150" height="7" rx="3" fill="#2c3037"/>
+              <rect x="46" y="376" width="104" height="24" rx="3" fill="url(#goldTxt)"/>
+              <rect x="162" y="376" width="104" height="24" rx="3" fill="none" stroke="#3a3f47"/>
+              <!-- nav dots -->
+              <rect x="46" y="26" width="70" height="8" rx="4" fill="#cba35c"/>
+              <rect x="470" y="26" width="40" height="8" rx="4" fill="#2c3037"/>
+              <rect x="524" y="26" width="70" height="8" rx="4" fill="none" stroke="#cba35c"/>
+            </svg>
+            <div class="overlay"><a href="obsidian-detail-co.html" data-cursor="Go">Open Live Build ↗</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="proj-info">
+        <span class="tag">Client Concept · Auto Detailing</span>
+        <h3>Obsidian Detail Co.</h3>
+        <p>A detailing studio that sells perfection needed a site that felt like standing in a showroom. Graphite and champagne gold, a real-time 3D hero of coated paint under sweeping bay lights, and a booking flow that feels like a concierge.</p>
+        <ul class="proj-feats">
+          <li>Three.js hero — water beads & light-tunnel reflections</li>
+          <li>Drag-to-compare before/after paint correction</li>
+          <li>Custom animated dropdowns with make → model logic</li>
+          <li>Date & time-slot booking with live availability feel</li>
+        </ul>
+        <div class="chips">
+          <span class="chip">Three.js</span><span class="chip">Vanilla JS</span><span class="chip">Booking UX</span><span class="chip">Mobile-First</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- PROJECT 2: FORGELINE -->
+    <article class="proj flip reveal">
+      <div class="proj-visual">
+        <div class="browser tilt" data-cursor="Open">
+          <div class="browser-bar"><i></i><i></i><i></i><span class="url">forgelineauto.com</span></div>
+          <div class="browser-view">
+            <svg viewBox="0 0 640 408" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <defs>
+                <linearGradient id="frgBg" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#111721"/><stop offset="1" stop-color="#0b0f14"/>
+                </linearGradient>
+                <linearGradient id="emberTxt" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0" stop-color="#ff7847"/><stop offset="1" stop-color="#ffb02e"/>
+                </linearGradient>
+              </defs>
+              <rect width="640" height="408" fill="url(#frgBg)"/>
+              <!-- grid floor -->
+              <g stroke="rgba(120,150,190,.14)" stroke-width="1">
+                <line x1="0" y1="250" x2="640" y2="250"/><line x1="0" y1="286" x2="640" y2="286"/>
+                <line x1="0" y1="330" x2="640" y2="330"/>
+                <line x1="80" y1="230" x2="10" y2="408"/><line x1="200" y1="230" x2="160" y2="408"/>
+                <line x1="320" y1="230" x2="320" y2="408"/><line x1="440" y1="230" x2="480" y2="408"/>
+                <line x1="560" y1="230" x2="630" y2="408"/>
+              </g>
+              <!-- wireframe car -->
+              <g transform="translate(320 200) scale(1.05)">
+                <path d="M-160 40 L-158 5 Q-155 -18 -128 -22 L-70 -27 Q-42 -55 8 -57 L58 -55 Q98 -50 122 -25 L152 -20 Q164 -12 162 8 L160 40 Z"
+                      fill="rgba(20,32,46,.55)" stroke="#ff7847" stroke-width="2"/>
+                <path d="M-64 -26 Q-40 -50 6 -52 L52 -50 L44 -26 Z" fill="none" stroke="rgba(255,120,71,.6)" stroke-width="1.2"/>
+                <circle cx="-95" cy="42" r="26" fill="#0b0f14" stroke="#ffb02e" stroke-width="2.4"/>
+                <circle cx="-95" cy="42" r="10" fill="none" stroke="#ff7847" stroke-width="1.6"/>
+                <circle cx="100" cy="42" r="26" fill="#0b0f14" stroke="#ffb02e" stroke-width="2.4"/>
+                <circle cx="100" cy="42" r="10" fill="none" stroke="#ff7847" stroke-width="1.6"/>
+              </g>
+              <!-- scan line -->
+              <rect x="316" y="120" width="3" height="130" fill="#ffb02e" opacity=".8"/>
+              <rect x="308" y="120" width="19" height="130" fill="#ffb02e" opacity=".12"/>
+              <!-- sparks -->
+              <g fill="#ff7847"><circle cx="120" cy="90" r="1.6"/><circle cx="500" cy="70" r="1.4"/><circle cx="420" cy="130" r="1.2"/><circle cx="220" cy="60" r="1.2"/><circle cx="560" cy="150" r="1.6"/></g>
+              <!-- headline -->
+              <text x="42" y="66" font-family="Impact,'Arial Black',sans-serif" font-size="38" fill="#ffffff" letter-spacing="1">BENT METAL IN.</text>
+              <text x="42" y="106" font-family="Impact,'Arial Black',sans-serif" font-size="38" fill="url(#emberTxt)" letter-spacing="1">STRAIGHT METAL OUT.</text>
+              <rect x="42" y="360" width="112" height="26" fill="url(#emberTxt)"/>
+              <rect x="166" y="360" width="112" height="26" fill="none" stroke="rgba(120,150,190,.35)"/>
+            </svg>
+            <div class="overlay"><a href="forgeline-auto-body.html" data-cursor="Go">Open Live Build ↗</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="proj-info">
+        <span class="tag">Client Concept · Auto Body + Dealer</span>
+        <h3>Forgeline Auto Body</h3>
+        <p>A collision shop that also buys and sells cars — three businesses in one brand. Industrial steel-and-ember identity, a rotating wireframe car being laser-scanned in 3D, and the star feature: an instant car value calculator.</p>
+        <ul class="proj-feats">
+          <li>Three.js wireframe car with sweeping scan & sparks</li>
+          <li>Live car value calculator — sliders, pills, animated payout</li>
+          <li>Shop-certified inventory cards with custom illustrations</li>
+          <li>Repair / Sell / Buy intent-driven contact flow</li>
+        </ul>
+        <div class="chips">
+          <span class="chip">Three.js</span><span class="chip">Value Engine</span><span class="chip">Custom UI Kit</span><span class="chip">Mobile-First</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- PROJECT 3: CULINERI — LIVE CLIENT -->
+    <article class="proj reveal">
+      <div class="proj-visual">
+        <div class="browser tilt" data-cursor="Open">
+          <div class="browser-bar"><i></i><i></i><i></i><span class="url">culineri.com</span></div>
+          <div class="browser-view">
+            <svg viewBox="0 0 640 408" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <rect width="640" height="408" fill="#faf6ee"/>
+              <!-- sidebar -->
+              <rect width="118" height="408" fill="#f3ecdd"/>
+              <line x1="118" y1="0" x2="118" y2="408" stroke="rgba(45,36,22,.15)"/>
+              <text x="59" y="52" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="20" fill="#4a3826">Culineri</text>
+              <g font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#8d8371">
+                <text x="20" y="110">01  HOME</text>
+                <text x="20" y="140" fill="#2f9fae">02  ABOUT</text>
+                <text x="20" y="170">03  MENU</text>
+                <text x="20" y="200">04  ORDER</text>
+                <text x="20" y="230">05  GALLERY</text>
+              </g>
+              <!-- hero lockup -->
+              <text x="379" y="96" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" letter-spacing="4" fill="#a08a6e">EST. 2025</text>
+              <text x="379" y="160" text-anchor="middle" font-family="Impact,'Arial Black',sans-serif" font-size="58" fill="#4a3826">CULINERI</text>
+              <text x="379" y="200" text-anchor="middle" font-family="Impact,'Arial Black',sans-serif" font-size="30" fill="none" stroke="#8a6a4a" stroke-width="1.4" letter-spacing="1">KITCHEN AND CO.</text>
+              <text x="379" y="226" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" letter-spacing="3" fill="#8d8371">HOME-BASED · MADE FRESH DAILY</text>
+              <!-- buttons -->
+              <rect x="292" y="248" width="86" height="24" rx="12" fill="#4a3826"/>
+              <rect x="388" y="248" width="80" height="24" rx="12" fill="none" stroke="rgba(45,36,22,.35)"/>
+              <!-- dish cards -->
+              <g>
+                <rect x="150" y="300" width="146" height="86" rx="8" fill="#ffffff" stroke="rgba(45,36,22,.14)"/>
+                <rect x="150" y="300" width="146" height="46" rx="8" fill="#e8ddc8"/>
+                <circle cx="223" cy="322" r="16" fill="#c99b62"/>
+                <rect x="162" y="356" width="70" height="7" rx="3" fill="#4a3826"/>
+                <rect x="162" y="369" width="40" height="8" rx="3" fill="#2f9fae" opacity=".85"/>
+                <rect x="316" y="300" width="146" height="86" rx="8" fill="#ffffff" stroke="rgba(45,36,22,.14)"/>
+                <rect x="316" y="300" width="146" height="46" rx="8" fill="#efe3cf"/>
+                <circle cx="389" cy="322" r="16" fill="#b3773f"/>
+                <rect x="328" y="356" width="78" height="7" rx="3" fill="#4a3826"/>
+                <rect x="328" y="369" width="40" height="8" rx="3" fill="#2f9fae" opacity=".85"/>
+                <rect x="482" y="300" width="146" height="86" rx="8" fill="#ffffff" stroke="rgba(45,36,22,.14)"/>
+                <rect x="482" y="300" width="146" height="46" rx="8" fill="#e4d5ba"/>
+                <circle cx="555" cy="322" r="16" fill="#d8b077"/>
+                <rect x="494" y="356" width="64" height="7" rx="3" fill="#4a3826"/>
+                <rect x="494" y="369" width="40" height="8" rx="3" fill="#2f9fae" opacity=".85"/>
+              </g>
+              <!-- aqua droplets -->
+              <g fill="#2f9fae" opacity=".55"><circle cx="180" cy="70" r="2"/><circle cx="560" cy="60" r="1.6"/><circle cx="500" cy="120" r="1.4"/><circle cx="230" cy="150" r="1.4"/></g>
+            </svg>
+            <div class="overlay"><a href="https://culineri.com/" target="_blank" rel="noopener" data-cursor="Go">Visit Live Site ↗</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="proj-info">
+        <span class="tag">Live Client Site · Home-Based Food Business</span>
+        <h3>Culineri Kitchen and Co.</h3>
+        <p>A real client, live at culineri.com. A home-based kitchen in the Philippines serving smash burgers, pastries, and catering — given a warm cream-and-coffee identity with a refreshing aqua accent, built to turn Facebook followers into orders.</p>
+        <ul class="proj-feats">
+          <li>Interactive order builder with live peso totals & Messenger flow</li>
+          <li>Sidebar navigation, founder story with photo/video switcher</li>
+          <li>Mixed photo & video gallery with lightbox players</li>
+          <li>Dual themes + custom-designed printable menu card</li>
+        </ul>
+        <div class="chips">
+          <span class="chip">Live Client</span><span class="chip">Vanilla JS</span><span class="chip">Order Builder</span><span class="chip">Dual Themes</span>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="stats">
+  <div class="shell">
+    <div class="stat-row reveal">
+      <div class="stat"><b data-count="3" data-suffix="">0</b><span>Sites Built</span></div>
+      <div class="stat"><b data-count="100" data-suffix="%">0</b><span>Hand-Coded</span></div>
+      <div class="stat"><b data-count="60" data-suffix="fps">0</b><span>Animations Target</span></div>
+      <div class="stat"><b data-count="1" data-suffix="">0</b><span>Live Client Launch</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="shell">
+    <div class="sec-head reveal">
+      <div class="eyebrow">What I Do</div>
+      <h2>One person. Full stack of craft.</h2>
+      <p>No agencies, no handoffs, no "that'll be extra." You talk to the person who designs it, builds it, and answers the phone.</p>
+    </div>
+    <div class="svc-grid">
+      <article class="svc reveal">
+        <span class="num">S / 01</span>
+        <h3>Web Design & Build</h3>
+        <p>Custom-designed, hand-coded sites with real identity — typography, color, and motion chosen for your business, not pulled from a theme.</p>
+      </article>
+      <article class="svc reveal">
+        <span class="num">S / 02</span>
+        <h3>3D & Motion</h3>
+        <p>Interactive Three.js scenes, scroll choreography, and micro-interactions that make a site feel alive without slowing it down.</p>
+      </article>
+      <article class="svc reveal">
+        <span class="num">S / 03</span>
+        <h3>Custom Tools</h3>
+        <p>Booking flows, calculators, configurators — the interactive features that turn a brochure site into something customers actually use.</p>
+      </article>
+      <article class="svc reveal">
+        <span class="num">S / 04</span>
+        <h3>Mobile-First Always</h3>
+        <p>Most of your customers are on a phone. Every layout, tap target, and animation is built for thumbs first, desktops second.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="process">
+  <div class="shell">
+    <div class="sec-head reveal">
+      <div class="eyebrow">How It Works</div>
+      <h2>From "we need a website"<br>to launch day.</h2>
+    </div>
+    <div class="flow reveal">
+      <div><h3>Discover</h3><p>A real conversation about your business, your customers, and what the site needs to do — not a 40-page questionnaire.</p></div>
+      <div><h3>Design</h3><p>A visual direction built around your brand. You'll see it, feel it, and shape it before a line of production code is written.</p></div>
+      <div><h3>Build</h3><p>Hand-coded, fast, and animated. You get progress previews you can open on your phone throughout.</p></div>
+      <div><h3>Launch & Care</h3><p>Deployed, tested on real devices, and supported after launch. When you need changes, you text me — not a ticket system.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="shell">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Pricing</div>
+      <h2>Clear plans. No surprise invoices.</h2>
+      <p>Pick a plan, tap the add-ons you want, and watch your estimate build itself — the same kind of interactive tool I'd build for your customers.</p>
+    </div>
+
+    <div class="plan-grid">
+      <article class="plan reveal" data-plan="launch" data-price="750" data-monthly="50" tabindex="0">
+        <span class="plan-tag">Starter</span>
+        <h3>Launch</h3>
+        <div class="amount"><small>$</small><span>750</span></div>
+        <div class="per">+ $50/mo care · 1–2 weeks</div>
+        <ul>
+          <li>Single-page custom site</li>
+          <li>Custom design — no templates</li>
+          <li>Mobile-first & fast loading</li>
+          <li>Contact form + click-to-call</li>
+          <li>Google Maps & socials linked</li>
+          <li>1 round of revisions</li>
+          <li>Care plan included — updates, backups & edits</li>
+        </ul>
+        <div class="pick">Select Launch</div>
+      </article>
+
+      <article class="plan feat picked reveal" data-plan="business" data-price="1800" data-monthly="75" tabindex="0">
+        <span class="ribbon">Most Popular</span>
+        <span class="plan-tag">Growth</span>
+        <h3>Business</h3>
+        <div class="amount"><small>$</small><span>1,800</span></div>
+        <div class="per">+ $75/mo care · 2–4 weeks</div>
+        <ul>
+          <li>Up to 6 sections / pages</li>
+          <li>Full brand identity & motion design</li>
+          <li>Scroll animations & micro-interactions</li>
+          <li>Photo gallery or inventory display</li>
+          <li>Basic SEO & analytics setup</li>
+          <li>2 rounds of revisions</li>
+          <li>Care plan included — updates, backups & monthly edits</li>
+        </ul>
+        <div class="pick">Select Business</div>
+      </article>
+
+      <article class="plan reveal" data-plan="signature" data-price="3500" data-monthly="125" tabindex="0">
+        <span class="plan-tag">Premium</span>
+        <h3>Signature</h3>
+        <div class="amount"><small>$</small><span>3,500</span></div>
+        <div class="per">from · + $125/mo care · 4–6 weeks</div>
+        <ul>
+          <li>Everything in Business</li>
+          <li>Custom 3D hero scene (Three.js)</li>
+          <li>One custom tool included — booking, calculator, or configurator</li>
+          <li>Advanced interactions & custom UI kit</li>
+          <li>Priority build & launch support</li>
+          <li>3 rounds of revisions</li>
+          <li>Priority care plan included — same-day edits & monitoring</li>
+        </ul>
+        <div class="pick">Select Signature</div>
+      </article>
+    </div>
+
+    <div class="builder reveal">
+      <div class="b-label">Add-Ons — tap to include</div>
+      <div class="addons" id="addons">
+        <button type="button" class="addon" data-price="400">Booking system <i>+$400</i></button>
+        <button type="button" class="addon" data-price="500">Calculator / custom tool <i>+$500</i></button>
+        <button type="button" class="addon" data-price="450">Extra 3D scene <i>+$450</i></button>
+        <button type="button" class="addon" data-price="300">Copywriting <i>+$300</i></button>
+        <button type="button" class="addon" data-price="250">Logo refresh <i>+$250</i></button>
+        <button type="button" class="addon" data-price="150">Hosting & domain setup <i>+$150</i></button>
+      </div>
+      <div class="estimate">
+        <div>
+          <div class="b-label" style="margin-bottom:8px">Your Estimate</div>
+          <div class="e-num" id="estNum">$1,800</div>
+        </div>
+        <div class="e-meta" id="estMeta"><b>Business</b> plan, no add-ons. Includes <b>$75/mo</b> care after launch. Half up front, half at launch.</div>
+        <a class="btn btn-grad magnetic" href="#contact" data-cursor="Go" id="estCta">Lock It In →</a>
+      </div>
+      <p class="price-note">Signature projects and complex tools are quoted after a quick call — these numbers are honest starting points, not bait.</p>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="shell reveal">
+    <div class="eyebrow">Let's Build Yours</div>
+    <h2>Your business deserves<br>a <span class="chroma" style="background:var(--grad);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:flow 6s ease-in-out infinite">site like this.</span></h2>
+    <p class="sub">Tell me what you do, and I'll show you what it could look like. Tap to copy, or just call.</p>
+    <div class="contact-cards">
+      <button class="ccard magnetic" id="copyEmail" data-cursor="Copy">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4h14v12H3z"/><path d="M3 5l7 6 7-6"/></svg>
+        sefffquitoriano@gmail.com
+        <span class="copied">Copied ✓</span>
+      </button>
+      <a class="ccard magnetic" href="tel:+17087724046" data-cursor="Call">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 3h4l2 5-3 2a12 12 0 0 0 3 3l2-3 5 2v4a1 1 0 0 1-1 1A15 15 0 0 1 3 4a1 1 0 0 1 1-1Z"/></svg>
+        (708) 772-4046
+      </a>
+    </div>
+    <form class="cform reveal" id="cform" novalidate>
+      <div class="cf-row">
+        <input type="text" name="name" placeholder="Your name" required autocomplete="name">
+        <input type="text" name="reply" placeholder="Email or phone" required autocomplete="email">
+      </div>
+      <textarea name="message" rows="4" placeholder="What does your business do, and what do you need the site to do?" required></textarea>
+      <div class="cf-foot">
+        <button class="btn btn-grad magnetic" type="submit" data-cursor="Send">Send It →</button>
+        <span class="cf-status" id="cfStatus" role="status"></span>
+      </div>
+    </form>
+  </div>
+</section>
+
+<footer class="site">
+  <a class="logo" href="#top">SEFF<i>.</i></a>
+  <p>© 2026 Seff · Designed & built by hand. Yes, this site too.</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const fine=matchMedia('(pointer:fine)').matches;
+const noMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ============ NAV ============ */
+const burger=document.getElementById('burger'),links=document.getElementById('navLinks');
+burger.addEventListener('click',()=>{
+  const open=links.classList.toggle('open');
+  burger.classList.toggle('open',open);
+  burger.setAttribute('aria-expanded',open);
+});
+links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
+  links.classList.remove('open');burger.classList.remove('open');
+  burger.setAttribute('aria-expanded','false');
+}));
+
+/* ============ SCROLL PROGRESS ============ */
+const bar=document.getElementById('progressBar');
+addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  bar.style.setProperty('--p',(h.scrollTop/(h.scrollHeight-h.clientHeight)).toFixed(4));
+},{passive:true});
+
+/* ============ CUSTOM CURSOR ============ */
+if(fine&&!noMotion){
+  const dot=document.getElementById('cDot'),ring=document.getElementById('cRing');
+  let mx=0,my=0,rx=0,ry=0;
+  addEventListener('pointermove',e=>{mx=e.clientX;my=e.clientY;
+    dot.style.left=mx+'px';dot.style.top=my+'px';
+  },{passive:true});
+  (function loop(){
+    rx+=(mx-rx)*0.16;ry+=(my-ry)*0.16;
+    ring.style.left=rx+'px';ring.style.top=ry+'px';
+    requestAnimationFrame(loop);
+  })();
+  document.querySelectorAll('a,button,[data-cursor]').forEach(el=>{
+    el.addEventListener('pointerenter',()=>{
+      ring.classList.add('hot');
+      ring.dataset.label=el.dataset.cursor||'';
+    });
+    el.addEventListener('pointerleave',()=>ring.classList.remove('hot'));
+  });
+}else{
+  document.getElementById('cDot').style.display='none';
+  document.getElementById('cRing').style.display='none';
+}
+
+/* ============ REVEALS ============ */
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}
+}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ============ STAGGERED REVEALS (framer-motion feel, zero libs) ============ */
+document.querySelectorAll('.svc-grid,.plan-grid').forEach(g=>{
+  [...g.children].forEach((c,i)=>{if(c.classList.contains('reveal'))c.style.transitionDelay=(i*110)+'ms';});
+});
+
+/* ============ CONTACT FORM ============ */
+const FORM_ENDPOINT='REPLACE_WITH_FORMSPREE_URL'; /* e.g. https://formspree.io/f/abcdwxyz */
+const cform=document.getElementById('cform');
+if(cform)cform.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const st=document.getElementById('cfStatus');
+  const fd=new FormData(cform);
+  const name=(fd.get('name')||'').toString().trim(),
+        reply=(fd.get('reply')||'').toString().trim(),
+        msg=(fd.get('message')||'').toString().trim();
+  if(!name||!reply||!msg){st.textContent='Fill in all three fields.';return;}
+  if(FORM_ENDPOINT.includes('REPLACE')){
+    location.href='mailto:sefffquitoriano@gmail.com?subject='+encodeURIComponent('Website inquiry — '+name)
+      +'&body='+encodeURIComponent(msg+'\n\nReach me at: '+reply);
+    st.textContent='Opening your email app…';return;
+  }
+  st.textContent='Sending…';
+  try{
+    const r=await fetch(FORM_ENDPOINT,{method:'POST',body:fd,headers:{'Accept':'application/json'}});
+    if(r.ok){st.textContent='Sent — I\'ll get back to you within a day. ✓';st.classList.add('ok');cform.reset();}
+    else st.textContent='Hmm, that didn\'t send. Email me directly instead?';
+  }catch(_){st.textContent='Network hiccup — email me directly instead?';}
+});
+
+/* ============ MARQUEE (duplicate for loop) ============ */
+const track=document.getElementById('marqueeTrack');
+track.innerHTML+=track.innerHTML;
+
+/* ============ 3D TILT (browsers + service cards) ============ */
+if(fine&&!noMotion){
+  document.querySelectorAll('.tilt,.svc').forEach(card=>{
+    const strength=card.classList.contains('tilt')?9:8;
+    card.addEventListener('pointermove',e=>{
+      const r=card.getBoundingClientRect();
+      const x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+      card.style.transform=`rotateY(${(x-.5)*strength}deg) rotateX(${(.5-y)*strength}deg) translateZ(8px)`;
+      card.style.setProperty('--gx',(x*100)+'%');
+      card.style.setProperty('--gy',(y*100)+'%');
+    });
+    card.addEventListener('pointerleave',()=>{card.style.transform='';});
+  });
+}
+
+/* ============ MAGNETIC BUTTONS ============ */
+if(fine&&!noMotion){
+  document.querySelectorAll('.magnetic').forEach(el=>{
+    el.addEventListener('pointermove',e=>{
+      const r=el.getBoundingClientRect();
+      const x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2;
+      el.style.transform=`translate(${x*0.22}px,${y*0.22}px)`;
+    });
+    el.addEventListener('pointerleave',()=>{el.style.transform='';});
+  });
+}
+
+/* ============ STAT COUNTERS ============ */
+const statIO=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting)return;
+  statIO.unobserve(e.target);
+  const b=e.target,target=+b.dataset.count,suf=b.dataset.suffix||'';
+  const start=performance.now(),dur=noMotion?1:1400;
+  (function tick(t){
+    const p=Math.min(1,(t-start)/dur),ease=1-Math.pow(1-p,3);
+    b.textContent=Math.round(target*ease)+suf;
+    if(p<1)requestAnimationFrame(tick);
+  })(start);
+}),{threshold:.6});
+document.querySelectorAll('.stat b').forEach(b=>statIO.observe(b));
+
+/* ============ COPY EMAIL ============ */
+const copyBtn=document.getElementById('copyEmail');
+copyBtn.addEventListener('click',()=>{
+  const email='sefffquitoriano@gmail.com';
+  if(navigator.clipboard)navigator.clipboard.writeText(email).catch(()=>{});
+  copyBtn.classList.add('done');
+  setTimeout(()=>copyBtn.classList.remove('done'),2200);
+});
+
+/* ============ PRICING ESTIMATE BUILDER ============ */
+const plans=document.querySelectorAll('.plan');
+const addonBtns=document.querySelectorAll('.addon');
+const estNum=document.getElementById('estNum'),estMeta=document.getElementById('estMeta');
+let planName='Business',planBase=1800,planMonthly=75,estShown=1800;
+let estAnim=null;
+
+function planSelect(p){
+  plans.forEach(x=>x.classList.remove('picked'));
+  p.classList.add('picked');
+  planName=p.querySelector('h3').textContent;
+  planBase=+p.dataset.price;
+  planMonthly=+p.dataset.monthly;
+  updateEstimate();
+}
+plans.forEach(p=>{
+  p.addEventListener('click',()=>planSelect(p));
+  p.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();planSelect(p);}});
+});
+addonBtns.forEach(b=>b.addEventListener('click',()=>{
+  b.classList.toggle('on');
+  updateEstimate();
+}));
+
+function animateEstimate(target){
+  cancelAnimationFrame(estAnim);
+  const from=estShown,start=performance.now(),dur=noMotion?1:550;
+  (function tick(t){
+    const p=Math.min(1,(t-start)/dur),e=1-Math.pow(1-p,3);
+    estShown=from+(target-from)*e;
+    let txt='$'+Math.round(estShown).toLocaleString();
+    estNum.textContent=txt;
+    if(p<1)estAnim=requestAnimationFrame(tick);
+  })(start);
+  estNum.classList.remove('bump');estNum.offsetHeight;estNum.classList.add('bump');
+}
+
+function updateEstimate(){
+  let oneTime=planBase,names=[];
+  addonBtns.forEach(b=>{
+    if(!b.classList.contains('on'))return;
+    oneTime+=+b.dataset.price;
+    names.push(b.textContent.replace(/\+?\$[\d,]+(\/mo)?/,'').trim());
+  });
+  animateEstimate(oneTime);
+  const extras=names.length?' + '+names.join(', ').toLowerCase():', no add-ons';
+  estMeta.innerHTML='<b>'+planName+'</b> plan'+extras
+    +'. Includes <b>$'+planMonthly+'/mo</b> care after launch. Half up front, half at launch.';
+}
+updateEstimate();
+
+/* ============ 3D HERO — a website assembling in space ============ */
+(function(){
+  const canvas=document.getElementById('scene');
+  let renderer;
+  try{renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});}
+  catch(e){canvas.style.display='none';return;}
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(45,1,0.1,100);
+  camera.position.set(0,0.2,8.4);
+
+  const JUN=0x3f7d5a,MINT=0x2f9e63,LIME=0x7aa93c,DARK=0xe3ece2,DEEP=0xd6e3d6;
+
+  function roundedRect(w,h,r){
+    const s=new THREE.Shape();
+    s.moveTo(-w/2+r,-h/2);
+    s.lineTo(w/2-r,-h/2);s.quadraticCurveTo(w/2,-h/2,w/2,-h/2+r);
+    s.lineTo(w/2,h/2-r);s.quadraticCurveTo(w/2,h/2,w/2-r,h/2);
+    s.lineTo(-w/2+r,h/2);s.quadraticCurveTo(-w/2,h/2,-w/2,h/2-r);
+    s.lineTo(-w/2,-h/2+r);s.quadraticCurveTo(-w/2,-h/2,-w/2+r,-h/2);
+    return s;
+  }
+  function panel(w,h,r,depth,color,opacity,edgeColor,edgeOpacity){
+    const g=new THREE.ExtrudeGeometry(roundedRect(w,h,r),{depth,bevelEnabled:false});
+    const mesh=new THREE.Mesh(g,new THREE.MeshStandardMaterial({
+      color,transparent:true,opacity,metalness:.3,roughness:.55
+    }));
+    if(edgeColor){
+      mesh.add(new THREE.LineSegments(
+        new THREE.EdgesGeometry(g,20),
+        new THREE.LineBasicMaterial({color:edgeColor,transparent:true,opacity:edgeOpacity||.7})
+      ));
+    }
+    return mesh;
+  }
+  function uiBar(w,h,color,glow){
+    return new THREE.Mesh(
+      new THREE.ExtrudeGeometry(roundedRect(w,h,Math.min(h/2,.08)),{depth:.06,bevelEnabled:false}),
+      new THREE.MeshStandardMaterial({color,emissive:color,emissiveIntensity:glow??.55,metalness:.2,roughness:.4})
+    );
+  }
+
+  const site=new THREE.Group();
+  const layers=[];
+  function addLayer(mesh,x,y,z,f){
+    mesh.position.set(x,y,z);
+    mesh.userData.base={x,y,z,f:f??z};
+    site.add(mesh);layers.push(mesh);
+    return mesh;
+  }
+
+  /* the page itself */
+  site.add(panel(4.6,3.1,.16,.1,DARK,.92,MINT,.45));
+
+  /* browser chrome: top bar + traffic dots */
+  addLayer(uiBar(4.15,.16,JUN,.35),0,1.28,.2);
+  [-1.9,-1.72,-1.54].forEach(x=>{
+    const d=new THREE.Mesh(new THREE.CylinderGeometry(.045,.045,.07,16),
+      new THREE.MeshStandardMaterial({color:MINT,emissive:MINT,emissiveIntensity:.9}));
+    d.rotation.x=Math.PI/2;
+    addLayer(d,x,1.28,.3);
+  });
+
+  /* headline blocks */
+  addLayer(uiBar(2.1,.26,MINT,.8),-1.05,.62,.36);
+  addLayer(uiBar(1.5,.26,MINT,.55),-1.35,.22,.32);
+  /* body copy lines */
+  addLayer(uiBar(1.95,.09,JUN,.5),-1.12,-.2,.26);
+  addLayer(uiBar(1.6,.09,JUN,.4),-1.3,-.44,.26);
+  /* CTA button — pulses like it wants to be clicked */
+  const cta=addLayer(uiBar(1.05,.36,MINT,1),-1.58,-.98,.46);
+
+  /* image card with sun + mountains */
+  addLayer(panel(1.75,1.55,.1,.08,DEEP,1,MINT,.7),1.18,-.05,.3);
+  const sun=new THREE.Mesh(new THREE.CylinderGeometry(.13,.13,.06,20),
+    new THREE.MeshStandardMaterial({color:LIME,emissive:LIME,emissiveIntensity:.9}));
+  sun.rotation.x=Math.PI/2;
+  addLayer(sun,1.52,.4,.44);
+  const mGeo=new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(.52,-.62,0),new THREE.Vector3(1.02,-.02,0),new THREE.Vector3(1.32,-.32,0),
+    new THREE.Vector3(1.58,-.06,0),new THREE.Vector3(1.84,-.62,0)
+  ]);
+  addLayer(new THREE.Line(mGeo,new THREE.LineBasicMaterial({color:MINT,transparent:true,opacity:.9})),0,0,.44);
+
+  /* a 3D mouse cursor that orbits in to "click" the CTA */
+  const curShape=new THREE.Shape();
+  curShape.moveTo(0,0);curShape.lineTo(0,-.34);curShape.lineTo(.085,-.25);
+  curShape.lineTo(.155,-.38);curShape.lineTo(.21,-.345);curShape.lineTo(.14,-.215);
+  curShape.lineTo(.26,-.2);curShape.closePath();
+  const cursor3d=new THREE.Mesh(
+    new THREE.ExtrudeGeometry(curShape,{depth:.05,bevelEnabled:false}),
+    new THREE.MeshStandardMaterial({color:0xffffff,emissive:LIME,emissiveIntensity:.4})
+  );
+  scene.add(cursor3d);
+
+  scene.add(site);
+
+  /* orbiting UI chips */
+  const chips=new THREE.Group();
+  const chipGeos=[uiBar(.4,.4,JUN,.45),uiBar(.55,.34,MINT,.4),uiBar(.4,.4,MINT,.5),uiBar(.6,.18,JUN,.5),uiBar(.34,.34,LIME,.4)];
+  chipGeos.forEach((c,i)=>{
+    c.userData={r:3.45+i*.22,sp:.3+i*.08,ph:i*1.35,vert:.4+i*.16};
+    chips.add(c);
+  });
+  scene.add(chips);
+
+  /* wire grid floor */
+  const grid=new THREE.GridHelper(40,40,0x2f6a4a,0xcadbca);
+  grid.position.y=-2.7;
+  scene.add(grid);
+
+  /* particles */
+  const pCount=noMotion?0:200;
+  const pGeo=new THREE.BufferGeometry();
+  const pPos=new Float32Array(pCount*3);
+  const rnd=(a,b)=>a+Math.random()*(b-a);
+  for(let i=0;i<pCount*3;i+=3){
+    const r=rnd(3.8,9.5),th=rnd(0,Math.PI*2),ph=rnd(0,Math.PI);
+    pPos[i]=r*Math.sin(ph)*Math.cos(th);
+    pPos[i+1]=r*Math.cos(ph)*0.65;
+    pPos[i+2]=r*Math.sin(ph)*Math.sin(th)-1;
+  }
+  pGeo.setAttribute('position',new THREE.BufferAttribute(pPos,3));
+  const pts=new THREE.Points(pGeo,new THREE.PointsMaterial({color:0x7fa78b,size:0.03,transparent:true,opacity:0.5}));
+  scene.add(pts);
+
+  scene.add(new THREE.AmbientLight(0xaec8b4,1.1));
+  const l1=new THREE.PointLight(0x2f9e63,1.3,30);l1.position.set(5,3,5);scene.add(l1);
+  const l2=new THREE.PointLight(0x3f7d5a,1.4,30);l2.position.set(-5,-2,4);scene.add(l2);
+  const l3=new THREE.PointLight(0x7aa93c,.8,30);l3.position.set(0,5,-3);scene.add(l3);
+
+  let tx=0,ty=0,cx=0,cy=0,energy=0,tEnergy=0;
+  addEventListener('pointermove',e=>{
+    tx=(e.clientX/innerWidth-0.5);ty=(e.clientY/innerHeight-0.5);
+    tEnergy=1;
+  },{passive:true});
+
+  /* drag to orbit — the scene is yours to spin */
+  let spinY=0,spinX=0,spinVy=0,spinVx=0,dragging=false,lx=0,ly=0;
+  canvas.addEventListener('pointerdown',e=>{
+    dragging=true;lx=e.clientX;ly=e.clientY;
+    canvas.classList.add('grabbing');
+    canvas.setPointerCapture(e.pointerId);
+    const hint=document.getElementById('dragHint');
+    if(hint)hint.classList.add('gone');
+  });
+  canvas.addEventListener('pointermove',e=>{
+    if(!dragging)return;
+    spinVy=(e.clientX-lx)*0.006;
+    spinVx=(e.clientY-ly)*0.004;
+    lx=e.clientX;ly=e.clientY;
+  });
+  ['pointerup','pointercancel'].forEach(ev=>canvas.addEventListener(ev,()=>{
+    dragging=false;canvas.classList.remove('grabbing');
+  }));
+
+  function resize(){
+    const w=canvas.clientWidth,h=canvas.clientHeight;
+    if(canvas.width!==w||canvas.height!==h){
+      renderer.setSize(w,h,false);
+      camera.aspect=w/h;camera.updateProjectionMatrix();
+      const s=Math.min(1,Math.max(.5,camera.aspect*.66));
+      site.scale.setScalar(s);
+      chips.scale.setScalar(Math.max(.7,s));
+    }
+  }
+
+  const clock=new THREE.Clock();
+  function frame(){
+    resize();
+    const t=clock.getElapsedTime();
+    if(!noMotion){
+      tEnergy*=0.985;energy+=(tEnergy-energy)*0.05;
+      cx+=(tx-cx)*0.05;cy+=(ty-cy)*0.05;
+
+      /* page tilts toward the cursor, floats gently — plus your spin */
+      spinY+=spinVy;spinX+=spinVx;
+      if(!dragging){spinVy*=0.93;spinVx*=0.93;spinX*=0.95;}
+      spinX=Math.max(-0.7,Math.min(0.7,spinX));
+      site.rotation.y=cx*0.55+spinY;
+      site.rotation.x=cy*0.32+spinX;
+      site.position.y=Math.sin(t*0.8)*0.07;
+
+      /* depth parallax: elements closer to you drift more + bob */
+      layers.forEach((m,i)=>{
+        const b=m.userData.base;
+        m.position.x=b.x+cx*b.f*-0.55;
+        m.position.y=b.y+cy*b.f*0.4+Math.sin(t*1.1+i)*0.012*(1+energy*2);
+        m.position.z=b.z+Math.sin(t*0.9+i*1.7)*0.02;
+      });
+
+      /* CTA pulse */
+      const pulse=1+Math.sin(t*2.6)*0.045;
+      cta.scale.set(pulse,pulse,1);
+      cta.material.emissiveIntensity=0.75+Math.sin(t*2.6)*0.3;
+
+      /* 3D cursor orbits in, dips to click the CTA, swings back out */
+      const ca=t*0.5;
+      const dip=Math.max(0,Math.sin(t*0.5-1.2));
+      const targ=new THREE.Vector3(-1.55,-1,1.1);
+      const orbit=new THREE.Vector3(Math.cos(ca)*3.2,Math.sin(ca*0.7)*1.1-0.4,1.4+Math.sin(ca)*0.8);
+      cursor3d.position.lerpVectors(orbit,targ,dip*dip);
+      cursor3d.rotation.z=Math.sin(t*0.5)*0.3-0.4;
+
+      chips.children.forEach(c=>{
+        const u=c.userData,a=t*u.sp+u.ph;
+        c.position.set(Math.cos(a)*u.r,Math.sin(a*0.8)*u.vert,Math.sin(a)*u.r*0.7);
+        c.rotation.y=a;c.rotation.x=a*0.4;
+      });
+      pts.rotation.y=t*0.018;
+
+      camera.position.x=cx*1.4;camera.position.y=0.2-cy*1;
+      camera.lookAt(0,0,0);
+    }
+    renderer.render(scene,camera);
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+</script>
+</body>
+</html>
