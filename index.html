@@ -169,7 +169,7 @@ h2{
 #scene{cursor:grab;touch-action:pan-y}
 #scene.grabbing{cursor:grabbing}
 .drag-hint{
-  position:absolute;bottom:26px;left:50%;transform:translateX(-50%);
+  position:absolute;bottom:92px;left:50%;transform:translateX(-50%);
   font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
   color:var(--dim);border:1px solid var(--hair);border-radius:100px;padding:8px 16px;
   background:rgba(255,255,255,.55);backdrop-filter:blur(6px);pointer-events:none;
@@ -459,6 +459,35 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--cya);outline-offset
   .stat{border-right:0;border-bottom:1px solid var(--hair)}
   .stat:last-child{border-bottom:0}
 }
+@media (max-width:640px){
+  /* hero: one hint is enough on a phone */
+  .drag-hint{display:none}
+  .hero-inner{padding:84px 18px 72px}
+  /* stats: tidy 2x2 with a center divider, lighter padding */
+  .stat-row{grid-template-columns:repeat(2,1fr)}
+  .stat{padding:22px 12px;border-bottom:1px solid var(--hair)}
+  .stat:nth-child(odd){border-right:1px solid var(--hair)}
+  .stat:nth-last-child(-n+2){border-bottom:0}
+  .stat b{font-size:28px}
+  .stat span{font-size:9.5px;letter-spacing:.14em}
+  /* process: the horizontal spine makes no sense stacked — drop it */
+  .flow{padding-top:0}
+  .flow::before,.flow::after{display:none}
+  /* cards: tighter padding */
+  .svc{padding:24px 20px}
+  .plan{padding:28px 22px}
+  /* estimate: stack instead of squeeze */
+  .estimate{flex-direction:column;align-items:flex-start;gap:14px}
+  .estimate .e-meta{max-width:none}
+  /* contact: full-width stacked pills instead of a cramped row */
+  .contact-cards{flex-direction:column;align-items:stretch}
+  .ccard{justify-content:center;padding:14px 18px;font-size:14px}
+  .big-cta .btn{font-size:15px;padding:16px 34px;width:100%;text-align:center}
+  /* project cards: calmer rhythm */
+  .proj{margin-bottom:64px}
+  .proj-info h3{font-size:24px}
+}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001s!important;transition-duration:.001s!important}
   html{scroll-behavior:auto}
